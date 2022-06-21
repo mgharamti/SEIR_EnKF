@@ -48,8 +48,9 @@ for t = 1:model.Nt
     
     X(:, t) = x;
     
-    RMSE(1, t) = abs(x(Ol(1)) - Y(1, t));
-    RMSE(2, t) = abs(x(Ol(2)) - Y(2, t));
+    for o = 1:da.Ny
+        RMSE(o, t) = abs(x(Ol(o)) - Y(o, t));
+    end
 end  
 
 % DA loop
@@ -206,27 +207,32 @@ legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Loc
 
 
 figure('pos', [100, 100, 1200, 350])
+if da.Ny > 2 
+    J = [3, 4];
+else
+    J = [1, 2];
+end
 
 subplot(121)
-plot(model.time, RMSE(1, :), 'Color', 'k', 'LineWidth', 2); hold on 
-plot(model.time, RMSEf(1, :), 'Color', bL, 'LineWidth', 2); 
-plot(model.time, RMSEa(1, :), 'Color', rD, 'LineWidth', 2);
+plot(model.time, RMSE(J(1), :), 'Color', 'k', 'LineWidth', 2); hold on 
+plot(model.time, RMSEf(J(1), :), 'Color', bL, 'LineWidth', 2); 
+plot(model.time, RMSEa(J(1), :), 'Color', rD, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 ylabel('Skill', 'FontSize', 18)
 title('Deaths', 'FontSize', 20)
-L = legend( sprintf('Model: %.3f', nanmean(RMSE(1, :))/1e4), ...
-            sprintf('Prior: %.3f', nanmean(RMSEf(1, :))/1e4), ...
-            sprintf('Posterior: %.3f', nanmean(RMSEa(1, :))/1e4));
+L = legend( sprintf('Model: %.3f', nanmean(RMSE(J(1), :))/1e4), ...
+            sprintf('Prior: %.3f', nanmean(RMSEf(J(1), :))/1e4), ...
+            sprintf('Posterior: %.3f', nanmean(RMSEa(J(1), :))/1e4));
 title(L, 'Per 10,000 People')
 
 subplot(122)
-plot(model.time, RMSE(2, :), 'Color', 'k', 'LineWidth', 2); hold on 
-plot(model.time, RMSEf(2, :), 'Color', bL, 'LineWidth', 2);  
-plot(model.time, RMSEa(2, :), 'Color', rD, 'LineWidth', 2);
+plot(model.time, RMSE(J(2), :), 'Color', 'k', 'LineWidth', 2); hold on 
+plot(model.time, RMSEf(J(2), :), 'Color', bL, 'LineWidth', 2);  
+plot(model.time, RMSEa(J(2), :), 'Color', rD, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 ylabel('Skill', 'FontSize', 18)
 title('Vaccination', 'FontSize', 20)
-L = legend( sprintf('Model: %.3f', nanmean(RMSE(2, :))/1e6), ...
-            sprintf('Prior: %.3f', nanmean(RMSEf(2, :))/1e6), ...
-            sprintf('Posterior: %.3f', nanmean(RMSEa(2, :))/1e6));
+L = legend( sprintf('Model: %.3f', nanmean(RMSE(J(2), :))/1e6), ...
+            sprintf('Prior: %.3f', nanmean(RMSEf(J(2), :))/1e6), ...
+            sprintf('Posterior: %.3f', nanmean(RMSEa(J(2), :))/1e6));
 title(L, 'Per 1 Million People')
