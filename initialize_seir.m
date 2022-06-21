@@ -57,6 +57,10 @@ b8 = 2.50 * ones(1, 876-700);   % omicron wave
 
 model.B = [b1, b2, b3, b4, b5, b6, b7, b8] / model.Npop;
 
+% Simple parameterization of alpha & beta (1) 
+% vs a more sophisticated one i.e, after the fact (2)
+model.p = 1;
+
 % state variables
 Q0 = 1;     % quarantined (confirmed and infected)
 I0 = 1;     % infected (not yet quarantined)

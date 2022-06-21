@@ -23,11 +23,30 @@ tf = '2022-06-15';
 
 % Free Run
 x = x0;
-for t = 1:model.Nt
-    model.alpha = model.A(t);
-    model.beta = model.B(t);
+X = zeros(model.Nx, model.Nt);
+RMSE = zeros(da.Ny, model.Nt);
 
+for t = 1:model.Nt
+
+    if model.p == 1
+        if t <= model.Nt1
+            model.beta = model.beta1; 
+        else
+            model.beta = model.beta2; 
+        end
+        if t > model.Nt2 
+            model.alpha = model.alpha2;
+        else
+            model.alpha = model.alpha1;
+        end
+    else
+        model.alpha = model.A(t);
+        model.beta  = model.B(t);
+    end
+    
     x = seir_rk4(model, x);
+    
+    X(:, t) = x;
     
     RMSE(1, t) = abs(x(Ol(1)) - Y(1, t));
     RMSE(2, t) = abs(x(Ol(2)) - Y(2, t));
@@ -51,8 +70,21 @@ Vaccin_ens = Active_ens;
 while t <= model.Nt
 
     % Forecast Step:
-    model.alpha = model.A(t);
-    model.beta  = model.B(t);
+    if model.p == 1
+        if t <= model.Nt1
+            model.beta = model.beta1; 
+        else
+            model.beta = model.beta2; 
+        end
+        if t > model.Nt2 
+            model.alpha = model.alpha2;
+        else
+            model.alpha = model.alpha1;
+        end
+    else
+        model.alpha = model.A(t);
+        model.beta  = model.B(t);
+    end
 
     Z = da.w * mean(Xa, 2);
     for e = 1:da.Ne
@@ -141,32 +173,36 @@ figure('pos', [100, 100, 1200, 600])
 subplot(221)
 E = plot(model.time, Suspet_ens, 'Color', bL, 'LineWidth', 1); hold on 
 M = plot(model.time, mean(Suspet_ens, 1), 'Color', 'k', 'LineWidth', 2);
+S = plot(model.time, X(1, :), 'Color', oR, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 title('Susceptible', 'FontSize', 20)
-legend([E(1), M], 'Prior Ensemble', 'Ensemble Mean', 'Location', 'East')
+legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'East')
 
 subplot(222)
 E = plot(model.time, Active_ens, 'Color', bL, 'LineWidth', 1); hold on 
 M = plot(model.time, mean(Active_ens, 1), 'Color', 'k', 'LineWidth', 2);
+S = plot(model.time, X(4, :), 'Color', oR, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 title('Quarantined', 'FontSize', 20)
-legend([E(1), M], 'Prior Ensemble', 'Ensemble Mean', 'Location', 'NorthEast')
+legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'NorthEast')
 
 subplot(223)
 E = plot(model.time, Deaths_ens, 'Color', bL, 'LineWidth', 1); hold on 
 M = plot(model.time, mean(Deaths_ens, 1), 'Color', 'k', 'LineWidth',2);
 D = plot(model.time, Deaths, '.r');
+S = plot(model.time, X(6, :), 'Color', oR, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 title('Deaths', 'FontSize', 20)
-legend([E(1), M, D], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Location', 'NorthWest')
+legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'NorthWest')
 
 subplot(224)
 E = plot(model.time, Vaccin_ens, 'Color', bL, 'LineWidth', 1); hold on 
 M = plot(model.time, mean(Vaccin_ens, 1), 'Color', 'k', 'LineWidth', 2);
 D = plot(model.time, Vaccinated, '.r');
+S = plot(model.time, X(7, :), 'Color', oR, 'LineWidth', 2);
 set(gca, 'FontSize', 14, 'YGrid', 'on')
 title('Fully Vaccinated', 'FontSize', 20)
-legend([E(1), M, D], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Location', 'SouthEast')
+legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'SouthEast')
 
 
 figure('pos', [100, 100, 1200, 350])

@@ -20,18 +20,22 @@ tf = '2022-06-15';
 X = zeros(model.Nx, model.Nt);
 for k = 1:model.Nt
 
-%     if k <= model.Nt1
-%         model.beta = model.beta1; 
-%     else
-%         model.beta = model.beta2; 
-%     end
-    model.beta = model.B(k);
-%     if k > model.Nt2 
-%         model.alpha = model.alpha2;
-%     else
-%         model.alpha = model.alpha1;
-%     end
-    model.alpha = model.A(k);
+    if model.p == 1
+        if k <= model.Nt1
+            model.beta = model.beta1; 
+        else
+            model.beta = model.beta2; 
+        end
+
+        if k > model.Nt2 
+            model.alpha = model.alpha2;
+        else
+            model.alpha = model.alpha1;
+        end
+    else       
+        model.alpha = model.A(k);
+        model.beta = model.B(k);
+    end
 
     x = seir_rk4(model, x);
     
