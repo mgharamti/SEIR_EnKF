@@ -1,4 +1,4 @@
-# SEIR_EnKF
+# SEIR EnKF
 
 The following repo implements the extended SEIR model presented in Ghostine et al. (2021) *"An Extended SEIR Model with Vaccination for Forecasting the
 COVID-19 Pandemic in Saudi Arabia Using an Ensemble Kalman Filter."*
