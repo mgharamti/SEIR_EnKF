@@ -3,7 +3,10 @@
 The following repo implements the extended SEIR model presented in Ghostine et al. (2021) *"An Extended SEIR Model with Vaccination for Forecasting the
 COVID-19 Pandemic in Saudi Arabia Using an Ensemble Kalman Filter."*
 
+![Screen Shot 2022-06-21 at 11 52 46 AM](https://user-images.githubusercontent.com/35781176/174866379-97592736-aa69-41d7-a5c1-25baa96b1d28.png)
+
 The model consists of seven state variables,
+
 - Susceptible (S)
 - Exposed (P)
 - Infected (I)
