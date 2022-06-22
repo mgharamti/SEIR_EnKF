@@ -218,5 +218,5 @@ for o = 1:da.Ny
     L = legend( sprintf('Model: %.3f', nanmean(RMSE(o, :))/1e5), ...
                 sprintf('Prior: %.3f', nanmean(RMSEf(o, :))/1e5), ...
                 sprintf('Posterior: %.3f', nanmean(RMSEa(o, :))/1e5));
-    title(L, 'Per 10,000 People')
+    title(L, 'Per 100,000 People')
 end
