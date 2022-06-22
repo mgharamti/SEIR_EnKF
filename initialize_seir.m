@@ -71,3 +71,6 @@ V0 = 0;     % vaccinated
 S0 = model.Npop - E0 - I0 - Q0 - R0 - D0;
 
 x0 = [S0, E0, I0, Q0, R0, D0, V0]';
+
+model.varnames = {'Susceptible', 'Exposed', 'Infected', 'Quarantined', ...
+                  'Recovered', 'Deaths', 'Vaccinated'};
