@@ -18,7 +18,7 @@ pert_type = 'Gaussian';
 % What data to assimilate:
 % 1- 'ARDV': Active, Recovered, Deaths, Vaccinated
 % 2- 'DV': Deaths, Vaccinated
-data_type = 'DV'; 
+da.data_type = 'DV'; 
 
 % Obs error variance for different data
 % May need to change these
@@ -35,7 +35,7 @@ obs_ervar(6) = sig_2_deaths;
 obs_ervar(7) = sig_2_vaccin;
 
 % Observation operators
-[~, Ol, Y, R] = observer(model.Nx, data_type, obs_ervar, Active, Recovered, Deaths, Vaccinated);
+[~, Ol, Y, R, da] = observer(model.Nx, da, obs_ervar, Active, Recovered, Deaths, Vaccinated);
 
 da.Ny = size(Y, 1);
 

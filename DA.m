@@ -206,33 +206,17 @@ title('Fully Vaccinated', 'FontSize', 20)
 legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'SouthEast')
 
 
-figure('pos', [100, 100, 1200, 350])
-if da.Ny > 2 
-    J = [3, 4];
-else
-    J = [1, 2];
+% RMSE 
+for o = 1:da.Ny
+    figure
+    plot(model.time, RMSE(o, :), 'Color', 'k', 'LineWidth', 2); hold on 
+    plot(model.time, RMSEf(o, :), 'Color', bL, 'LineWidth', 2); 
+    plot(model.time, RMSEa(o, :), 'Color', rD, 'LineWidth', 2);
+    set(gca, 'FontSize', 14, 'YGrid', 'on')
+    ylabel('Skill', 'FontSize', 18)
+    title(model.varnames(da.vars(o)), 'FontSize', 20)
+    L = legend( sprintf('Model: %.3f', nanmean(RMSE(o, :))/1e5), ...
+                sprintf('Prior: %.3f', nanmean(RMSEf(o, :))/1e5), ...
+                sprintf('Posterior: %.3f', nanmean(RMSEa(o, :))/1e5));
+    title(L, 'Per 10,000 People')
 end
-
-subplot(121)
-plot(model.time, RMSE(J(1), :), 'Color', 'k', 'LineWidth', 2); hold on 
-plot(model.time, RMSEf(J(1), :), 'Color', bL, 'LineWidth', 2); 
-plot(model.time, RMSEa(J(1), :), 'Color', rD, 'LineWidth', 2);
-set(gca, 'FontSize', 14, 'YGrid', 'on')
-ylabel('Skill', 'FontSize', 18)
-title('Deaths', 'FontSize', 20)
-L = legend( sprintf('Model: %.3f', nanmean(RMSE(J(1), :))/1e4), ...
-            sprintf('Prior: %.3f', nanmean(RMSEf(J(1), :))/1e4), ...
-            sprintf('Posterior: %.3f', nanmean(RMSEa(J(1), :))/1e4));
-title(L, 'Per 10,000 People')
-
-subplot(122)
-plot(model.time, RMSE(J(2), :), 'Color', 'k', 'LineWidth', 2); hold on 
-plot(model.time, RMSEf(J(2), :), 'Color', bL, 'LineWidth', 2);  
-plot(model.time, RMSEa(J(2), :), 'Color', rD, 'LineWidth', 2);
-set(gca, 'FontSize', 14, 'YGrid', 'on')
-ylabel('Skill', 'FontSize', 18)
-title('Vaccination', 'FontSize', 20)
-L = legend( sprintf('Model: %.3f', nanmean(RMSE(J(2), :))/1e6), ...
-            sprintf('Prior: %.3f', nanmean(RMSEf(J(2), :))/1e6), ...
-            sprintf('Posterior: %.3f', nanmean(RMSEa(J(2), :))/1e6));
-title(L, 'Per 1 Million People')
