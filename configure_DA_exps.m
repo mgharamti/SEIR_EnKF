@@ -1,15 +1,15 @@
-function [Ol, Y, R, Xa, da] = configure_DA(model, x0, Active, Recovered, Deaths, Vaccinated)
+function [Ol, Y, R, Xa, da] = configure_DA_exps(model, x0, Active, Recovered, Deaths, Vaccinated, my_config)
 
 % Ensemble Size
-da.Ne    = 20;
+da.Ne    = my_config.Ne;
 da.denom = (model.Nx - 1)*da.Ne;
 
-da.w     = 0.0001;      % Additive inflation
-da.clamp = 1.e-10;      % Clamping state value
+da.w     = my_config.w;      % Additive inflation
+da.clamp = my_config.clamp;      % Clamping state value
 
-da.anamorph = true;     % State Transformation
-da.inflate  = 1.02;     % Multiplicative inflation
-da.filter   = 'EAKF';   % Filter kind [EAKF, EnKF, RHF] 
+da.anamorph = my_config.anamorph;     % State Transformation
+da.inflate  = my_config.inflate;     % Multiplicative inflation
+da.filter   = my_config.filter;   % Filter kind [EAKF, EnKF, RHF] 
 
 % Initial ensemble perturbation
 pert_sig  = [1, 1, 1, 1, 1, 1, 1]; 
@@ -17,14 +17,13 @@ pert_type = 'Gaussian';
 
 % What data to assimilate:
 % 1- 'ARDV': Active, Recovered, Deaths, Vaccinated
-%  - 'AR' : Active, Recovered
-% 2- 'DV' : Death, Vaccinated
-%  - 'D' : Death
+% 2- 'AR' : Active, Recovered
+% 3- 'DV' : Death, Vaccinated
 
-da.data_type = 'ARDV'; 
+da.data_type = my_config.data_type; 
 
 % Obs error variance for different data
-% May need to change these
+% May need to change these -- confidence in data
 sig_2_active = 1e16;
 sig_2_recovr = 1e14;
 sig_2_deaths = 1e10;

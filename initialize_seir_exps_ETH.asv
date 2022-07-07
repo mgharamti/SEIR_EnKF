@@ -1,8 +1,8 @@
-function [model, x0] = initialize_seir(ti, tl, tv, tf)
+function [model, x0] = initialize_seir_exps_ETH(ti, tl, tv, tf, my_config)
 
 % Variable definitions: 
-model.Npop = 331996199;     % population (US: 331996199, CO: 5961083)
-model.Nx   = 7;             % size of the state
+model.Npop = 115e6;     % population (Source: World Bank)
+model.Nx   = 7;         % size of the state
 
 model.dt = 1/24; % time step
 
@@ -25,8 +25,8 @@ model.trec    = 14;         % Recovery time     [1/lambda] (source: webmed.com)
 model.kappa   = 0.00308;    % Mortality rate   [kappa] e.g., 307.58 per 100,000 pop (source: John Hopkins)
 model.tdea    = 7;          % Time until death  [1/rho]
 
-model.mu      = 2.4776e-5;  % natural death rate [US: 8,295/Npop] (source: https://worldpopulationreview.com/countries/deaths-per-day)
-model.Lambda  = 10267+2200; % new birth and new residents [TODO: check the accuracy of this] 
+model.mu      = 2.4776e-5;  % natural death rate [] (source: https://worldpopulationreview.com/countries/deaths-per-day)
+model.Lambda  = 10267+2200; % new birth and new residents [for 2020] 
 
 model.Rp1     = 2.5;       % Basic reproduction number before lockdown
 model.Rp2     = 1.0;       % Basic reproduction number after lockdown
@@ -35,7 +35,7 @@ model.beta2   = 0.40/model.Npop;   % transmission rate during/after intervention
 
 model.alpha1  = 0.0;       % vaccination rate (introduced later in time!)
 model.alpha2  = 7e-3;    
-model.sigma   = .175;       % vacc efficiency (pfizer: 95%, JJ: 70%) take average?!.175
+model.sigma   = 0.175;       % vacc efficiency (pfizer: 95%, JJ: 70%) take average?!
 
 % Periods for: Vaccination rate 
 a1 = 0.0 * ones(1, model.Nt2);
@@ -59,7 +59,7 @@ model.B = [b1, b2, b3, b4, b5, b6, b7, b8] / model.Npop;
 
 % Simple parameterization of alpha & beta (1) 
 % vs a more sophisticated one i.e, after the fact (2)
-model.p = 1;
+model.p = my_config.p;
 
 % state variables
 Q0 = 1;     % quarantined (confirmed and infected)

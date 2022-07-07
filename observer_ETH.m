@@ -1,4 +1,4 @@
-function [H, ObsLoc, Observations, obs_err_var, da] = observer(Nx, da, sig_2, Active, Recovered, Deaths, Vaccinated)
+function [H, ObsLoc, Observations, obs_err_var, da] = observer_ETH(Nx, da, sig_2, Active, Recovered, Deaths, Vaccinated)
 
     switch da.data_type
         case 'ARDV'
@@ -25,7 +25,7 @@ function [H, ObsLoc, Observations, obs_err_var, da] = observer(Nx, da, sig_2, Ac
             obs_err_var  = diag(sig_2(da.vars));
             Observations = [Active; Recovered];
     
-        case 'DV'
+        case 'AD'
             da.vars = 6:Nx;
 
             hdiag          = zeros(Nx, 1);
@@ -35,7 +35,7 @@ function [H, ObsLoc, Observations, obs_err_var, da] = observer(Nx, da, sig_2, Ac
             H(izeros, :)   = [];
 
             obs_err_var  = diag(sig_2(da.vars));
-            Observations = [Deaths; Vaccinated];
+            Observations = [Active; Deaths; ];
          
     end
 

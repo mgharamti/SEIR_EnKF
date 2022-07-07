@@ -1,4 +1,4 @@
-function [model, x0] = initialize_seir(ti, tl, tv, tf)
+function [model, x0] = initialize_seir_exps(ti, tl, tv, tf, my_config)
 
 % Variable definitions: 
 model.Npop = 331996199;     % population (US: 331996199, CO: 5961083)
@@ -35,7 +35,7 @@ model.beta2   = 0.40/model.Npop;   % transmission rate during/after intervention
 
 model.alpha1  = 0.0;       % vaccination rate (introduced later in time!)
 model.alpha2  = 7e-3;    
-model.sigma   = .175;       % vacc efficiency (pfizer: 95%, JJ: 70%) take average?!.175
+model.sigma   = 0.175;       % vacc efficiency (pfizer: 95%, JJ: 70%) take average?!
 
 % Periods for: Vaccination rate 
 a1 = 0.0 * ones(1, model.Nt2);
@@ -59,7 +59,7 @@ model.B = [b1, b2, b3, b4, b5, b6, b7, b8] / model.Npop;
 
 % Simple parameterization of alpha & beta (1) 
 % vs a more sophisticated one i.e, after the fact (2)
-model.p = 1;
+model.p = my_config.p;
 
 % state variables
 Q0 = 1;     % quarantined (confirmed and infected)
