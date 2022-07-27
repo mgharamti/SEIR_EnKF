@@ -10,7 +10,7 @@ tv = '2021-03-30';
 tf = '2022-06-15';
 
 % Time definition:
-[model, x] = initialize_seir_exps_TR(ti, tl, tv, tf, my_config);
+[model, x] = initialize_seir_exps_TR(ti, tl, tv, tf, my_config_TR);
 
 % Data:
 [~, Active, Recovered, Deaths, Vaccinated] = read_data_TR;
@@ -51,25 +51,27 @@ oR = [ 255, 153,  51 ]/255;
 
 figure('pos', [100, 100, 1200, 600])
 
+% Note: These subpots represent unreliable Vaccination and Recovered Data.
+
+% subplot(221)
+% plot(model.time, X(4, :), 'Color', bL, 'LineWidth', 2); hold on 
+% plot(model.time, Active, '.k')
+% plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)
+% plot(datetime(tv), 0, 'o', 'Color', gR, 'MarkerFaceColor', gR, 'MarkerSize', 12)
+% set(gca, 'FontSize', 14, 'YGrid', 'on')
+% title('Active Cases', 'FontSize', 20)
+% legend('Model', 'Data', 'First Lockdown', 'Vaccination', 'Location', 'NorthEast')
+% 
+% subplot(222)
+% plot(model.time, X(5, :), 'Color', bL, 'LineWidth', 2); hold on 
+% plot(model.time, Recovered, '.k')
+% plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)
+% plot(datetime(tv), 0, 'o', 'Color', gR, 'MarkerFaceColor', gR, 'MarkerSize', 12)
+% set(gca, 'FontSize', 14, 'YGrid', 'on')
+% title('Recovered Cases', 'FontSize', 20)
+% legend('Model', 'Data', 'First Lockdown', 'Vaccination', 'Location', 'East')
+
 subplot(221)
-plot(model.time, X(4, :), 'Color', bL, 'LineWidth', 2); hold on 
-plot(model.time, Active, '.k')
-plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)
-plot(datetime(tv), 0, 'o', 'Color', gR, 'MarkerFaceColor', gR, 'MarkerSize', 12)
-set(gca, 'FontSize', 14, 'YGrid', 'on')
-title('Active Cases', 'FontSize', 20)
-legend('Model', 'Data', 'First Lockdown', 'Vaccination', 'Location', 'NorthEast')
-
-subplot(222)
-plot(model.time, X(5, :), 'Color', bL, 'LineWidth', 2); hold on 
-plot(model.time, Recovered, '.k')
-plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)
-plot(datetime(tv), 0, 'o', 'Color', gR, 'MarkerFaceColor', gR, 'MarkerSize', 12)
-set(gca, 'FontSize', 14, 'YGrid', 'on')
-title('Recovered Cases', 'FontSize', 20)
-legend('Model', 'Data', 'First Lockdown', 'Vaccination', 'Location', 'East')
-
-subplot(223)
 plot(model.time, X(6, :), 'Color', bL, 'LineWidth', 2); hold on 
 plot(model.time, Deaths, '.k')
 plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)
@@ -78,7 +80,7 @@ set(gca, 'FontSize', 14, 'YGrid', 'on')
 title('Deaths', 'FontSize', 20)
 legend('Model', 'Data', 'First Lockdown', 'Vaccination', 'Location', 'NorthWest')
 
-subplot(224)
+subplot(222)
 plot(model.time, X(7, :), 'Color', bL, 'LineWidth', 2); hold on 
 plot(model.time, Vaccinated, '.k')
 plot(datetime(tl), 0, 'o', 'Color', rD, 'MarkerFaceColor', rD, 'MarkerSize', 12)

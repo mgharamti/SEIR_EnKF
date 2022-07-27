@@ -1,20 +1,20 @@
-% clear 
+clear 
 % close all
 % clc
 
-my_config.p         = 1;   % how beta and alpha are chosen 
-my_config.Ne        = 20;  % default is 20
-my_config.w         = 0.0001;
-my_config.clamp     = 1.e-10;
-my_config.anamorph  = false;
-my_config.inflate   = 1.00;
-my_config.filter    = 'EAKF';
-my_config.data_type = 'DV';
-my_config.results   = false; 
+my_config_TR.p         = 2;   % how beta and alpha are chosen 
+my_config_TR.Ne        = 20;  % default is 20
+my_config_TR.w         = 0.0099;
+my_config_TR.clamp     = 1.e-10;
+my_config_TR.anamorph  = false;
+my_config_TR.inflate   = 1.00;
+my_config_TR.filter    = 'EAKF';
+my_config_TR.data_type = 'DV';
+my_config_TR.results   = false; 
 
 %set to false when doing senstivity runs --> true shows state evol.
 
-%[model, da, obs, diags, state] = DA_exps_(my_config); % was commented
+% [model, da, obs, diags, state] = DA_exps_TR(my_config_TR); % was commented
 
 %% inflation sensitivity
 
@@ -30,10 +30,10 @@ for i = 1:Ni
     disp(['Experiment: ' num2str(i) ', inflation: ' num2str(infvals(i))])
 
     % change inflation value
-    my_config.inflate = infvals(i);
+    my_config_TR.inflate = infvals(i);
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config_TR);
 end
 
 % Plot
@@ -52,11 +52,11 @@ for o = 1:da.Ny
     subplot(nr, nc, o) 
 
     plot(model.time, diags(1).RMSE(o, :), '*','Color', 'k', 'MarkerSize', 6); hold on 
-    leg_text{1} = sprintf('SEIR Model (no DA), RMSE: %.3f', nanmean(diags(1).RMSE(o, :)/1e7)) ;
+    leg_text{1} = sprintf('SEIR Model (no DA), RMSE: %.3f', nanmean(diags(1).RMSE(o, :))) ;
 
     for i = 1:Ni
         plot(model.time, diags(i).RMSEf(o, :),'*', 'Color', C(i, :), 'MarkerSize', 6); 
-        leg_text{i+1} = sprintf('DA; inf: %.3f, RMSE: %.3f', infvals(i), nanmean(diags(i).RMSEf(o, :)/1e7));
+        leg_text{i+1} = sprintf('DA; inf: %.3f, RMSE: %.3f', infvals(i), nanmean(diags(i).RMSEf(o, :)));
     end
     set(gca, 'FontSize', 16, 'YGrid', 'on')
     ylabel('Skill', 'FontSize', 18)
@@ -76,17 +76,17 @@ for i = 1:Ni
     disp(['Experiment: ' num2str(i) ', filter: ' filters{i}])
 
     % change inflation value
-    my_config.filter = filters{i};
+    my_config_TR.filter = filters{i};
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config_TR);
 end
 
 C = parula(Ni);
 
 figure('Position', [10, 10, 1200, 440])
 
-nr = 2;
+nr = 1;
 nc = 2;
 
 leg_text = cell(Ni, 1);
@@ -95,14 +95,14 @@ for o = 1:da.Ny
     subplot(nr, nc, o) 
 
     plot(model.time, diags(1).RMSE(o, :), 'Color', 'k', 'LineWidth', 2); hold on 
-    leg_text{1} = sprintf('SEIR Model (no DA), RMSE: %.3f', nanmean(diags(1).RMSE(o, :)/1e6)) ;
+    leg_text{1} = sprintf('SEIR Model (no DA), RMSE: %.3f', nanmean(diags(1).RMSE(o, :))) ;
 
     for i = 1:Ni
         plot(model.time, diags(i).RMSEf(o, :), 'Color', C(i, :), 'LineWidth', 2); 
-        leg_text{i+1} = sprintf('DA: %s, RMSE: %.3f', filters{i}, nanmean(diags(i).RMSEf(o, :)/1e6));
+        leg_text{i+1} = sprintf('DA: %s, RMSE: %.3f', filters{i}, nanmean(diags(i).RMSEf(o, :)));
     end
     set(gca, 'FontSize', 16, 'YGrid', 'on')
-    ylabel('Skill', 'FontSize', 18)
+    ylabel('RMSE', 'FontSize', 18)
     title(model.varnames(da.vars(o)), 'FontSize', 20)
     legend(leg_text)
 end
@@ -120,10 +120,10 @@ for i = 1:Ni
     display (['Experiment ', num2str(i), ', Number of ensembles: ', num2str(Evals(i))])
 
     % change ensemble value
-    my_config.Ne = Evals(i);
+    my_config_TR.Ne = Evals(i);
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config_TR);
 end
 
 C = parula(Ni); % returns a cm as a 3 clm array with the same nr cm for current figure.
@@ -168,10 +168,10 @@ for i = 1:Ni
     display (['Experiment ', num2str(i), ', Anamorphosis: ', (anamorph{i})])
 
     % change anamorph value
-    my_config.anamorph = anamorph{i};
+    my_config_TR.anamorph = anamorph{i};
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps_TR(my_config_TR);
 end
 
 % Plot

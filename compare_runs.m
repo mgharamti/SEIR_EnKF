@@ -1,20 +1,20 @@
-% clear 
-% close all
-% clc
+clear 
+close all
+clc
 
-my_config.p         = 1;   % how beta and alpha are chosen 
-my_config.Ne        = 20;  % default is 20
-my_config.w         = 0.0001;
-my_config.clamp     = 1.e-10;
-my_config.anamorph  = false;
-my_config.inflate   = 1.00;
-my_config.filter    = 'EAKF';
-my_config.data_type = 'DV';
-my_config.results   = false; 
+my_config_USA.p         = 2;   % how beta and alpha are chosen 
+my_config_USA.Ne        = 50;  % default is 20
+my_config_USA.w         = 0.0019;% additive inflation
+my_config_USA.clamp     = 1.e-10;
+my_config_USA.anamorph  = false;
+my_config_USA.inflate   = 1.00;
+my_config_USA.filter    = 'EAKF'; %EAKF, EnKF, RHF
+my_config_USA.data_type = 'DV';
+my_config_USA.results   = 1; 
 
 %set to false when doing senstivity runs --> true shows state evol.
 
-%[model, da, obs, diags, state] = DA_exps_(my_config); % was commented
+% [model, da, obs, diags, state] = DA_exps_USA(my_config_USA); % was commented
 
 %% inflation sensitivity
 
@@ -30,10 +30,10 @@ for i = 1:Ni
     disp(['Experiment: ' num2str(i) ', inflation: ' num2str(infvals(i))])
 
     % change inflation value
-    my_config.inflate = infvals(i);
+    my_config_USA.inflate = infvals(i);
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps(my_config_USA);
 end
 
 % Plot
@@ -76,10 +76,10 @@ for i = 1:Ni
     disp(['Experiment: ' num2str(i) ', filter: ' filters{i}])
 
     % change inflation value
-    my_config.filter = filters{i};
+    my_config_USA.filter = filters{i};
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps(my_config_USA);
 end
 
 C = parula(Ni);
@@ -120,10 +120,10 @@ for i = 1:Ni
     display (['Experiment ', num2str(i), ', Number of ensembles: ', num2str(Evals(i))])
 
     % change ensemble value
-    my_config.Ne = Evals(i);
+    my_config_USA.Ne = Evals(i);
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps(my_config_USA);
 end
 
 C = parula(Ni); % returns a cm as a 3 clm array with the same nr cm for current figure.
@@ -168,10 +168,10 @@ for i = 1:Ni
     display (['Experiment ', num2str(i), ', Anamorphosis: ', (anamorph{i})])
 
     % change anamorph value
-    my_config.anamorph = anamorph{i};
+    my_config_USA.anamorph = anamorph{i};
 
     % now, run DA:
-    [model, da, obs, diags(i), state(i)] = DA_exps(my_config);
+    [model, da, obs, diags(i), state(i)] = DA_exps(my_config_USA);
 end
 
 % Plot

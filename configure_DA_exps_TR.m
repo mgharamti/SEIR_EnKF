@@ -1,15 +1,15 @@
-function [Ol, Y, R, Xa, da] = configure_DA_exps_TR(model, x0, Active, Recovered, Deaths, Vaccinated, my_config)
+function [Ol, Y, R, Xa, da] = configure_DA_exps_TR(model, x0, Active, Recovered, Deaths, Vaccinated, my_config_TR)
 
 % Ensemble Size
-da.Ne    = my_config.Ne;
+da.Ne    = my_config_TR.Ne;
 da.denom = (model.Nx - 1)*da.Ne;
 
-da.w     = my_config.w;      % Additive inflation
-da.clamp = my_config.clamp;      % Clamping state value
+da.w     = my_config_TR.w;      % Additive inflation
+da.clamp = my_config_TR.clamp;  % Clamping state value
 
-da.anamorph = my_config.anamorph;     % State Transformation
-da.inflate  = my_config.inflate;     % Multiplicative inflation
-da.filter   = my_config.filter;   % Filter kind [EAKF, EnKF, RHF] 
+da.anamorph = my_config_TR.anamorph;     % State Transformation
+da.inflate  = my_config_TR.inflate;      % Multiplicative inflation
+da.filter   = my_config_TR.filter;       % Filter kind [EAKF, EnKF, RHF] 
 
 % Initial ensemble perturbation
 pert_sig  = [1, 1, 1, 1, 1, 1, 1]; 
@@ -20,14 +20,14 @@ pert_type = 'Gaussian';
 % 2- 'AR' : Active, Recovered
 % 3- 'DV' : Death, Vaccinated
 
-da.data_type = my_config.data_type; 
+da.data_type = my_config_TR.data_type; 
 
 % Obs error variance for different data
 % May need to change these -- confidence in data
 sig_2_active = 1e16;
 sig_2_recovr = 1e14;
-sig_2_deaths = 1e10;
-sig_2_vaccin = 1e10;
+sig_2_deaths = 1e06;%15 03
+sig_2_vaccin = 1e10;%10
 
 obs_ervar = NaN * ones(1, model.Nx);
 

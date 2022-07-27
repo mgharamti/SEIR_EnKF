@@ -1,4 +1,4 @@
-function [model, da, obs, diags, state] = DA_exps(my_config_USA)
+function [model, da, obs, diags, state] = DA_exps_USA(my_config_USA)
 
 rng('default') 
 
@@ -13,11 +13,11 @@ tf = '2022-06-15';
 
 
 % Data:
-[~, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated] = read_data;
+[~, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated] = read_data_USA;
 
 
 % DA Configuration:f
-[Ol, Y, R, Xa, da] = configure_DA_US(model, x0, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated, my_config_USA);
+[Ol, Y, R, Xa, da] = configure_DA_USA(model, x0, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated, my_config_USA);
 
 
 % Free Run
@@ -174,25 +174,27 @@ gY = [ 210, 210, 210 ]/255;
 
 if my_config_USA.results
 
-    figure('pos', [100, 100, 1200, 600])
+    figure('pos', [100, 100, 1200, 400])
+
+% Note: These subpots represent unreliable Vaccination and Recovered Data.
     
-    subplot(221)
-    E = plot(model.time, Suspet_ens, 'Color', bL, 'LineWidth', 1); hold on 
-    M = plot(model.time, mean(Suspet_ens, 1), 'Color', 'k', 'LineWidth', 2);
-    S = plot(model.time, state.X(1, :), 'Color', oR, 'LineWidth', 2);
-    set(gca, 'FontSize', 14, 'YGrid', 'on')
-    title('Susceptible', 'FontSize', 20)
-    legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'East')
+%     subplot(221)
+%     E = plot(model.time, Suspet_ens, 'Color', bL, 'LineWidth', 1); hold on %was bL -- ensemble
+%     M = plot(model.time, mean(Suspet_ens, 1), 'Color', 'k', 'LineWidth', 2);
+%     S = plot(model.time, state.X(1, :), 'Color', '#2E8B57', 'LineWidth', 2);
+%     set(gca, 'FontSize', 14, 'YGrid', 'on')
+%     title('Susceptible', 'FontSize', 20)
+%     legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'East')
+%     
+%     subplot(222)
+%     E = plot(model.time, Active_ens, 'Color', bL, 'LineWidth', 1); hold on 
+%     M = plot(model.time, mean(Active_ens, 1), 'Color', 'k', 'LineWidth', 2);
+%     S = plot(model.time, state.X(4, :), 'Color', '	#008B00', 'LineWidth', 2);
+%     set(gca, 'FontSize', 14, 'YGrid', 'on')
+%     title('Quarantined', 'FontSize', 20)
+%     legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'NorthEast')
     
-    subplot(222)
-    E = plot(model.time, Active_ens, 'Color', bL, 'LineWidth', 1); hold on 
-    M = plot(model.time, mean(Active_ens, 1), 'Color', 'k', 'LineWidth', 2);
-    S = plot(model.time, state.X(4, :), 'Color', oR, 'LineWidth', 2);
-    set(gca, 'FontSize', 14, 'YGrid', 'on')
-    title('Quarantined', 'FontSize', 20)
-    legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'NorthEast')
-    
-    subplot(223)
+    subplot(121)
     E = plot(model.time, Deaths_ens, 'Color', bL, 'LineWidth', 1); hold on 
     M = plot(model.time, mean(Deaths_ens, 1), 'Color', 'k', 'LineWidth',2);
     D = plot(model.time, obs.Deaths, '.r');
@@ -201,11 +203,11 @@ if my_config_USA.results
     title('Deaths', 'FontSize', 20)
     legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'NorthWest')
     
-    subplot(224)
+    subplot(122)
     E = plot(model.time, Vaccin_ens, 'Color', bL, 'LineWidth', 1); hold on 
     M = plot(model.time, mean(Vaccin_ens, 1), 'Color', 'k', 'LineWidth', 2);
     D = plot(model.time, obs.Vaccinated, '.r');
-    S = plot(model.time, state.X(7, :), 'Color', oR, 'LineWidth', 2);
+    S = plot(model.time, state.X(7, :), 'Color',oR, 'LineWidth', 2);
     set(gca, 'FontSize', 14, 'YGrid', 'on')
     title('Fully Vaccinated', 'FontSize', 20)
     legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'SouthEast')
@@ -216,7 +218,7 @@ if my_config_USA.results
         figure
         plot(model.time, diags.RMSE(o, :), 'Color', 'k', 'LineWidth', 2); hold on 
         plot(model.time, diags.RMSEf(o, :), 'Color', bL, 'LineWidth', 2); 
-        plot(model.time, diags.RMSEa(o, :), 'Color', rD, 'LineWidth', 2);
+        plot(model.time, diags.RMSEa(o, :), 'Color', '#DC143C', 'LineWidth', 2);
         set(gca, 'FontSize', 14, 'YGrid', 'on')
         ylabel('Skill', 'FontSize', 18)
         title(model.varnames(da.vars(o)), 'FontSize', 20)

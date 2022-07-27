@@ -4,12 +4,12 @@ function [Ol, Y, R, Xa, da] = configure_DA_exps_GY(model, x0, Active, Recovered,
 da.Ne    = my_config.Ne;
 da.denom = (model.Nx - 1)*da.Ne;
 
-da.w     = my_config.w;      % Additive inflation
+da.w     = my_config.w;          % Additive inflation
 da.clamp = my_config.clamp;      % Clamping state value
 
 da.anamorph = my_config.anamorph;     % State Transformation
-da.inflate  = my_config.inflate;     % Multiplicative inflation
-da.filter   = my_config.filter;   % Filter kind [EAKF, EnKF, RHF] 
+da.inflate  = my_config.inflate;      % Multiplicative inflation
+da.filter   = my_config.filter;       % Filter kind [EAKF, EnKF, RHF] 
 
 % Initial ensemble perturbation
 pert_sig  = [1, 1, 1, 1, 1, 1, 1]; 
@@ -22,12 +22,11 @@ pert_type = 'Gaussian';
 
 da.data_type = my_config.data_type; 
 
-% Obs error variance for different data
-% May need to change these -- confidence in data
-sig_2_active = 1e16;
-sig_2_recovr = 1e14;
-sig_2_deaths = 1e7;
-sig_2_vaccin = 1e12;
+% Obs error variance for different data -- confidence in data
+sig_2_active = 1e9;  %16
+sig_2_recovr = 1e4;  %9
+sig_2_deaths = 1e5;  %6 3
+sig_2_vaccin = 1e10; %9 8
 
 obs_ervar = NaN * ones(1, model.Nx);
 

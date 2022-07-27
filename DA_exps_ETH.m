@@ -1,4 +1,4 @@
-function [model, da, obs, diags, state] = DA_exps_ETH(my_config)
+function [model, da, obs, diags, state] = DA_exps_ETH(my_config_ETH)
 
 rng('default') 
 
@@ -9,7 +9,7 @@ tv = '2021-01-03';
 tf = '2021-01-03';
 
 % Initialize Model:
-[model, x0] = initialize_seir_exps_ETH(ti, tl, tv, tf, my_config);
+[model, x0] = initialize_seir_exps_ETH(ti, tl, tv, tf, my_config_ETH);
 
 
 % Data:
@@ -17,7 +17,7 @@ tf = '2021-01-03';
 
 
 % DA Configuration:
-[Ol, Y, R, Xa, da] = configure_DA_exps_ETH(model, x0, obs.Active, obs.Recovered,obs.Deaths, obs.Vaccinated, my_config);
+[Ol, Y, R, Xa, da] = configure_DA_exps_ETH(model, x0, obs.Active, obs.Recovered,obs.Deaths, obs.Vaccinated, my_config_ETH);
 
 
 % Free Run
@@ -62,7 +62,7 @@ diags.AESPf = diags.RMSEf;
 diags.AESPa = diags.RMSEf;
 
 
-state.Xprior     = zeros(model.Nx, da.Ne, model.Nt);
+state.Xprior = zeros(model.Nx, da.Ne, model.Nt);
 Active_ens = zeros(da.Ne, model.Nt);
 Suspet_ens = Active_ens;
 Recovr_ens = Active_ens;
@@ -172,7 +172,7 @@ pR = [ 153,  51, 255 ]/255;
 oR = [ 255, 153,  51 ]/255;
 gY = [ 210, 210, 210 ]/255;
 
-if my_config.results
+if my_config_ETH.results
 
     figure('pos', [100, 100, 1200, 600])
     
@@ -187,10 +187,11 @@ if my_config.results
     subplot(222)
     E = plot(model.time, Active_ens, 'Color', bL, 'LineWidth', 1); hold on 
     M = plot(model.time, mean(Active_ens, 1), 'Color', 'k', 'LineWidth', 2);
+    D = plot(model.time, obs.Active, '.r');
     S = plot(model.time, state.X(4, :), 'Color', oR, 'LineWidth', 2);
     set(gca, 'FontSize', 14, 'YGrid', 'on')
     title('Quarantined', 'FontSize', 20)
-    legend([E(1), M, S], 'Prior Ensemble', 'Ensemble Mean', 'Model', 'Location', 'NorthEast')
+    legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data','Model', 'Location', 'NorthEast')
     
     subplot(223)
     E = plot(model.time, Deaths_ens, 'Color', bL, 'LineWidth', 1); hold on 
@@ -201,15 +202,14 @@ if my_config.results
     title('Deaths', 'FontSize', 20)
     legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'NorthWest')
     
-%     subplot(224)
-%     E = plot(model.time, Vaccin_ens, 'Color', bL, 'LineWidth', 1); hold on 
-%     M = plot(model.time, mean(Vaccin_ens, 1), 'Color', 'k', 'LineWidth', 2);
-%     D = plot(model.time, obs.Vaccinated, '.r');
-%     S = plot(model.time, state.X(7, :), 'Color', oR, 'LineWidth', 2);
-%     set(gca, 'FontSize', 14, 'YGrid', 'on')
-%     title('Fully Vaccinated', 'FontSize', 20)
-%     legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'SouthEast')
-%     
+    subplot(224)
+    E = plot(model.time, Recovr_ens, 'Color', bL, 'LineWidth', 1); hold on 
+    M = plot(model.time, mean(Recovr_ens, 1), 'Color', 'k', 'LineWidth', 2);
+    D = plot(model.time, obs.Recovered, '.r');
+    S = plot(model.time, state.X(5, :), 'Color', oR, 'LineWidth', 2);
+    set(gca, 'FontSize', 14, 'YGrid', 'on')
+    title('Recovered', 'FontSize', 20)
+    legend([E(1), M, D, S], 'Prior Ensemble', 'Ensemble Mean', 'Data', 'Model', 'Location', 'SouthEast')  
     
     % RMSE 
     for o = 1:da.Ny

@@ -1,6 +1,6 @@
-clear 
+%clear 
 clc
-close all
+%close all
 
 rng('default') 
 
@@ -12,7 +12,7 @@ tf = '2021-01-03';
 
 
 % Time definition:
-[model, x] = initialize_seir_exps_ETH(ti, tl, tv, tf);
+[model, x] = initialize_seir_exps_ETH(ti, tl, tv, tf, my_config_ETH);
 
 % Data:
 [~, Active, Recovered, Deaths] = read_data_ETH;

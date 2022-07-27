@@ -3,9 +3,10 @@ function [model, da, obs, diags, state] = DA_exps_GY(my_config)
 rng('default') 
 
 % [i] period before/after lockdown, [ii] vaccination, [iii] final time:
+
 ti = '2020-01-22';   
-tl = '2020-04-20'; 
-tv = '2020-12-14';
+tl = '2020-03-18'; 
+tv = '2021-03-29';
 tf = '2022-06-15';
 
 % Initialize Model:

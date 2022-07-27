@@ -1,4 +1,4 @@
-function [model, da, obs, diags, state] = DA_exps_TR(my_config)
+function [model, da, obs, diags, state] = DA_exps_TR(my_config_TR)
 
 rng('default') 
 
@@ -9,7 +9,7 @@ tv = '2021-03-30';
 tf = '2022-06-15';
 
 % Initialize Model:
-[model, x0] = initialize_seir_exps_TR(ti, tl, tv, tf, my_config);
+[model, x0] = initialize_seir_exps_TR(ti, tl, tv, tf, my_config_TR);
 
 
 % Data:
@@ -17,7 +17,7 @@ tf = '2022-06-15';
 
 
 % DA Configuration:
-[Ol, Y, R, Xa, da] = configure_DA_exps_TR(model, x0, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated, my_config);
+[Ol, Y, R, Xa, da] = configure_DA_exps_TR(model, x0, obs.Active, obs.Recovered, obs.Deaths, obs.Vaccinated, my_config_TR);
 
 
 % Free Run
@@ -172,7 +172,7 @@ pR = [ 153,  51, 255 ]/255;
 oR = [ 255, 153,  51 ]/255;
 gY = [ 210, 210, 210 ]/255;
 
-if my_config.results
+if my_config_TR.results
 
     figure('pos', [100, 100, 1200, 600])
     

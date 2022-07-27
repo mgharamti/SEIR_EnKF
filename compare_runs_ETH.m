@@ -1,20 +1,64 @@
 clear 
-close all
+%close all
 clc
 
-my_config_ETH.p         = 1;   % how beta and alpha are chosen 
+my_config_ETH.p         = 2;   % beta and alpha:1-less paramaterized, 2-more paramterized 
 my_config_ETH.Ne        = 20;  % default is 20
-my_config_ETH.w         = 0.0001;
+my_config_ETH.w         = 0.0; % additive inflation
 my_config_ETH.clamp     = 1.e-10;
 my_config_ETH.anamorph  = false;
 my_config_ETH.inflate   = 1.00;
 my_config_ETH.filter    = 'EAKF';
-my_config_ETH.data_type = 'AR';
-my_config_ETH.results   = false; 
+my_config_ETH.data_type = 'ARD'; %{A, AR, ARD}
+my_config_ETH.results   = true; 
 
 %set to false when doing senstivity runs --> true shows state evol.
 
-%[model, da, obs, diags, state] = DA_exps_(my_config); % was commented
+[model, da, obs, diags, state] = DA_exps_ETH(my_config_ETH); %comment when doing sensitivity runs
+
+%% Ethiopia_DataTypes
+
+disp ('RMSE SENSITIVITY TO DATA TYPE ADDITIONS')
+datatype = {'A', 'AR','AD','ARD'}; 
+
+Ni       = length(datatype);
+
+for i = 1:Ni
+
+    disp(['Experiment: ' num2str(i) ', Data Type: ' datatype{i}])
+    
+    %change data value 
+    my_config_ETH.data_type = datatype{i};
+
+    % now, run DA
+    [model, da, obs, diags(i), state(i)] = DA_exps_ETH(my_config_ETH);
+
+end
+
+% PLOT
+C = parula(Ni);
+
+figure('Position', [10, 10, 1200, 440])
+nr = 4;
+nc = 4;
+
+leg_text = cell(Ni, 1);
+   
+
+plot(model.time, diags(1).RMSE, 'Color', 'k', 'LineWidth', 2); hold on 
+leg_text{1} = sprintf('SEIR Model (no DA), RMSE: %.5f', nanmean(diags(1).RMSE)) ;
+
+for i = 1:Ni
+    plot(model.time, diags(i).RMSEf(1,:), 'Color', C(i, :), 'LineWidth', 2); 
+    leg_text{i+1} = sprintf('DA: %s, RMSE: %.5f', datatype{i}, nanmean(diags(i).RMSEf(1,:)));
+end
+set(gca, 'FontSize', 16, 'YGrid', 'on')
+ylabel('Skill', 'FontSize', 18)
+title(model.varnames(da.vars(1)), 'FontSize', 20)
+legend(leg_text)
+
+
+
 
 %% inflation sensitivity
 
@@ -38,11 +82,11 @@ end
 
 % Plot
 
-C = parula(Ni); % returns a cm as a 3 clm array with the same nr c m forcurrent figure.
+C = parula(Ni); 
 
 figure('Position', [10, 10, 1400, 440])
 
-nr = 1; % number of rows
+nr = 2; % number of rows
 nc = 2; % number of columns
 
 leg_text = cell(Ni, 1); 
@@ -71,7 +115,7 @@ disp ('RUNNING SENSITIVITY TEST FOR DIFFERENT FILTERS')
 filters = {'EAKF', 'EnKF', 'RHF'};
 Ni      = length(filters);
 
-for i = 1:Ni    
+for i = 1:Ni   
 
     disp(['Experiment: ' num2str(i) ', filter: ' filters{i}])
 
@@ -111,7 +155,7 @@ end
 
 
 Evals = [20, 50, 100];
-Ni = length(Evals);
+Ni    = length(Evals);
 
 disp ( 'RUNNING SENSITIVITY TEST FOR DIFFERENT NUMBER OF ENSEMBLES') 
 
@@ -126,7 +170,7 @@ for i = 1:Ni
     [model, da, obs, diags(i), state(i)] = DA_exps_ETH(my_config_ETH);
 end
 
-C = parula(Ni); % returns a cm as a 3 clm array with the same nr cm for current figure.
+C = parula(Ni); 
 
 figure('Position', [10, 10, 1400, 440])
 
@@ -175,7 +219,7 @@ for i = 1:Ni
 end
 
 % Plot
-C = parula(Ni); % returns a cm as a 3 clm array with the same nr cm for current figure.
+C = parula(Ni); 
 
 figure('Position', [10, 10, 1400, 440])
 

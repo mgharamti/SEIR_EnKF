@@ -1,4 +1,4 @@
-function [model, x0] = initialize_seir(ti, tl, tv, tf)
+function [model, x0] = initialize_seir(ti, tl, tv, tf, my_config)
 
 % Variable definitions: 
 model.Npop = 331996199;     % population (US: 331996199, CO: 5961083)
@@ -59,7 +59,7 @@ model.B = [b1, b2, b3, b4, b5, b6, b7, b8] / model.Npop;
 
 % Simple parameterization of alpha & beta (1) 
 % vs a more sophisticated one i.e, after the fact (2)
-model.p = 1;
+model.p = my_config.p;
 
 % state variables
 Q0 = 1;     % quarantined (confirmed and infected)
